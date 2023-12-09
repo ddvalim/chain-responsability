@@ -30,5 +30,9 @@ func LoadEnvVariables() {
 		DBPort = 5432
 	}
 
-	ConnectionString = fmt.Sprintf("postgres://postgres:postgres@localhost:%d/postgres?sslmode=disable", DBPort)
+	ConnectionString = fmt.Sprintf("%s:%s@/%s?charset=utf8&parseTime=True&loc=Local",
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB_NAME"),
+	)
 }
