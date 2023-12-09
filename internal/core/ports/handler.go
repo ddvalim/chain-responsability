@@ -1,6 +1,7 @@
 package ports
 
 type Process struct {
+	ID       string
 	Name     string
 	LastName string
 	Genre    string

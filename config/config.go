@@ -10,18 +10,25 @@ import (
 
 var (
 	ConnectionString = ""
-	Port             = 0
+	APIPort          = 0
+	DBPort           = 0
 )
 
 func LoadEnvVariables() {
-	if err := godotenv.Load(); err != nil {
+	err := godotenv.Load()
+	if err != nil {
 		log.Fatal(err)
 	}
 
-	Port, err := strconv.Atoi(os.Getenv("API_PORT"))
+	APIPort, err = strconv.Atoi(os.Getenv("API_PORT"))
 	if err != nil {
-		Port = 5432
+		APIPort = 8686
 	}
 
-	ConnectionString = fmt.Sprintf("postgres://postgres:postgres@localhost:%d/postgres?sslmode=disable", Port)
+	DBPort, err = strconv.Atoi(os.Getenv("DB_PORT"))
+	if err != nil {
+		DBPort = 5432
+	}
+
+	ConnectionString = fmt.Sprintf("postgres://postgres:postgres@localhost:%d/postgres?sslmode=disable", DBPort)
 }

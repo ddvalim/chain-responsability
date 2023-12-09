@@ -39,13 +39,13 @@ func (ur UsersRepository) Create(user model.User) (string, error) {
 	return strconv.FormatInt(userID, 10), nil
 }
 
-func (ur UsersRepository) GetUser(email string) (model.User, error) {
+func (ur UsersRepository) GetUser(email string) (*model.User, error) {
 	users, err := ur.db.Query(
 		"SELECT id, name, lastname, email, password, createdAt FROM users WHERE email = ?",
 		email,
 	)
 	if err != nil {
-		return model.User{}, err
+		return nil, err
 	}
 
 	defer users.Close()
@@ -53,10 +53,11 @@ func (ur UsersRepository) GetUser(email string) (model.User, error) {
 	var user model.User
 
 	if users.Next() {
-		if err := users.Scan(&user.ID, &user.Name, &user.LastName, &user.Genre, &user.Age, &user.Email, &user.CreatedAt); err != nil {
-			return model.User{}, err
+		if err := users.Scan(&user.ID, &user.Name, &user.LastName, &user.Genre, &user.Age, &user.Email,
+			&user.CreatedAt); err != nil {
+			return nil, err
 		}
 	}
 
-	return user, nil
+	return &user, nil
 }

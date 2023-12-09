@@ -20,7 +20,7 @@ func NewUserController() UserController {
 	return UserController{UserService: userService}
 }
 
-func (u UserController) Controller(w http.ResponseWriter, r *http.Request) {
+func (u UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		response.Error(w, http.StatusBadRequest, err)
