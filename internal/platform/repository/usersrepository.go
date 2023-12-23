@@ -3,7 +3,6 @@ package repository
 import (
 	"chain-responsability/model"
 	"database/sql"
-	"fmt"
 	"log"
 	"strconv"
 )
@@ -38,14 +37,10 @@ func (ur UsersRepository) Create(user model.User) (string, error) {
 		return "", err
 	}
 
-	log.Print(userID)
-
 	return strconv.FormatInt(userID, 10), nil
 }
 
 func (ur UsersRepository) Get(email string) (*model.User, error) {
-	log.Print(fmt.Sprintf("email: %s", email))
-
 	users, err := ur.db.Query(
 		"SELECT id, name, lastname, genre, age, email, createdAt FROM users WHERE email LIKE ?",
 		email,
@@ -83,7 +78,7 @@ func (ur UsersRepository) DeleteUser(email string) error {
 		return err
 	}
 
-	fmt.Println(result)
+	log.Print(result)
 
 	return nil
 }

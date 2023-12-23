@@ -2,7 +2,6 @@ package users
 
 import (
 	"chain-responsability/internal/core/ports"
-	"log"
 	"net/http"
 )
 
@@ -30,8 +29,6 @@ func getChain(method string) ports.Handler {
 
 func (s ServiceImpl) Init(p ports.Process, method string) error {
 	chain := getChain(method)
-
-	log.Print(p)
 
 	err := chain.StartProcess(&p)
 	if err != nil {
