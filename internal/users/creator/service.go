@@ -1,4 +1,4 @@
-package create
+package creator
 
 import (
 	"chain-responsability/database"

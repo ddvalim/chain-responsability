@@ -6,14 +6,18 @@ import (
 	"chain-responsability/internal/platform/repository"
 	"errors"
 	"log"
+	"net/http"
 )
 
 type Service struct {
-	Next ports.Handler
+	Next   ports.Handler
+	method string
 }
 
-func NewService() *Service {
-	return &Service{}
+func NewService(method string) *Service {
+	return &Service{
+		method: method,
+	}
 }
 
 func (s *Service) StartProcess(process *ports.Process) error {
@@ -26,13 +30,19 @@ func (s *Service) StartProcess(process *ports.Process) error {
 
 	usersRepository := repository.NewUsersRepository(db)
 
-	user, err := usersRepository.GetUser(process.Email)
+	user, err := usersRepository.Get(process.Email)
 	if err != nil {
 		return err
 	}
 
 	if user != nil {
-		return errors.New("user already exists")
+		if s.method == http.MethodPost {
+			return errors.New("user already exists")
+		}
+	} else {
+		if s.method == http.MethodDelete {
+			return errors.New("user not found")
+		}
 	}
 
 	if s.Next != nil {

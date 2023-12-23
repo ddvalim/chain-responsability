@@ -3,10 +3,11 @@ package database
 import (
 	"chain-responsability/config"
 	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func Connect() (*sql.DB, error) {
-	db, err := sql.Open("postgres", config.ConnectionString)
+	db, err := sql.Open("mysql", config.ConnectionString)
 	if err != nil {
 		return nil, err
 	}
