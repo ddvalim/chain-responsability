@@ -6,7 +6,7 @@ import (
 )
 
 type Service interface {
-	Init(p ports.Process, method string) error
+	Init(p *ports.Process, method string) error
 }
 
 type ServiceImpl struct{}
@@ -21,16 +21,18 @@ func getChain(method string) ports.Handler {
 		return Create()
 	case http.MethodDelete:
 		return Delete()
+	case http.MethodGet:
+		return Get()
 	}
 
 	// TODO: Fix me!
 	return Create()
 }
 
-func (s ServiceImpl) Init(p ports.Process, method string) error {
+func (s ServiceImpl) Init(p *ports.Process, method string) error {
 	chain := getChain(method)
 
-	err := chain.StartProcess(&p)
+	err := chain.StartProcess(p)
 	if err != nil {
 		return err
 	}

@@ -5,6 +5,7 @@ import (
 	"chain-responsability/internal/core/ports"
 	"chain-responsability/internal/users/creator"
 	"chain-responsability/internal/users/deleter"
+	"chain-responsability/internal/users/getter"
 	"chain-responsability/internal/users/validate"
 	"log"
 	"net/http"
@@ -33,4 +34,15 @@ func Delete() ports.Handler {
 	validateSvc.SetNext(deleteSvc)
 
 	return validateSvc
+}
+
+func Get() ports.Handler {
+	db, err := database.Connect()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	getSvc := getter.NewService(db)
+
+	return getSvc
 }

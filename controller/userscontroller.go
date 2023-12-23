@@ -48,7 +48,7 @@ func (u UserController) Create(w http.ResponseWriter, r *http.Request) {
 		Age:      user.Age,
 	}
 
-	err = u.UserService.Init(process, http.MethodPost)
+	err = u.UserService.Init(&process, http.MethodPost)
 	if err != nil {
 		response.Error(w, http.StatusBadRequest, err)
 		return
@@ -71,12 +71,33 @@ func (u UserController) Delete(w http.ResponseWriter, r *http.Request) {
 		Email: email,
 	}
 
-	err := u.UserService.Init(process, http.MethodDelete)
+	err := u.UserService.Init(&process, http.MethodDelete)
 	if err != nil {
 		response.Error(w, http.StatusBadRequest, err)
 		return
 	}
 
 	response.Write(w, http.StatusNoContent, nil)
+	return
+}
+
+func (u UserController) Get(w http.ResponseWriter, r *http.Request) {
+	email := r.URL.Query().Get("email")
+	if len(email) == 0 {
+		response.Error(w, http.StatusUnprocessableEntity, errors.New("missing email query parameter"))
+		return
+	}
+
+	process := ports.Process{
+		Email: email,
+	}
+
+	err := u.UserService.Init(&process, http.MethodGet)
+	if err != nil {
+		response.Error(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response.Write(w, http.StatusOK, process.User)
 	return
 }

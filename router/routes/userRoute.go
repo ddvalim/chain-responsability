@@ -16,4 +16,9 @@ var UserRoutes = []Route{
 		Method: http.MethodDelete,
 		Func:   controller.NewUserController().Delete,
 	},
+	{
+		URI:    "/user",
+		Method: http.MethodGet,
+		Func:   controller.NewUserController().Get,
+	},
 }
