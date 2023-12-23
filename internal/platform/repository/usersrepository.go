@@ -3,8 +3,8 @@ package repository
 import (
 	"chain-responsability/model"
 	"database/sql"
-	"log"
 	"strconv"
+	"time"
 )
 
 type UsersRepository struct {
@@ -51,16 +51,29 @@ func (ur UsersRepository) Get(email string) (*model.User, error) {
 
 	defer users.Close()
 
-	var user *model.User
+	var name, lastName, genre, age string
+	var createdAt time.Time
+	var id uint64
 
 	if users.Next() {
-		if err = users.Scan(&user.ID, &user.Name, &user.LastName, &user.Genre, &user.Age, &user.Email,
-			&user.CreatedAt); err != nil {
+		if err = users.Scan(&id, &name, &lastName, &genre, &age, &email, &createdAt); err != nil {
 			return nil, err
 		}
+
+		user := model.User{
+			ID:        id,
+			Name:      name,
+			LastName:  lastName,
+			Genre:     genre,
+			Age:       age,
+			Email:     email,
+			CreatedAt: createdAt,
+		}
+
+		return &user, nil
 	}
 
-	return user, nil
+	return nil, nil
 }
 
 func (ur UsersRepository) DeleteUser(email string) error {
@@ -73,12 +86,10 @@ func (ur UsersRepository) DeleteUser(email string) error {
 
 	defer stmt.Close()
 
-	result, err := stmt.Exec(email)
+	_, err = stmt.Exec(email)
 	if err != nil {
 		return err
 	}
-
-	log.Print(result)
 
 	return nil
 }
