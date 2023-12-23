@@ -22,7 +22,7 @@ func (s *Service) StartProcess(process *ports.Process) error {
 
 	usersRepository := repository.NewUsersRepository(s.DB)
 
-	err := usersRepository.DeleteUser(process.Email)
+	err := usersRepository.Delete(process.Email)
 	if err != nil {
 		return err
 	}
