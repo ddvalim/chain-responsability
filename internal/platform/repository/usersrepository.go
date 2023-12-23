@@ -76,7 +76,7 @@ func (ur UsersRepository) Get(email string) (*model.User, error) {
 	return nil, nil
 }
 
-func (ur UsersRepository) DeleteUser(email string) error {
+func (ur UsersRepository) Delete(email string) error {
 	stmt, err := ur.db.Prepare(
 		"DELETE FROM users WHERE email = ?",
 	)
