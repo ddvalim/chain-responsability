@@ -6,6 +6,7 @@ import (
 	"chain-responsability/internal/users"
 	"chain-responsability/model"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/http"
 )
@@ -20,7 +21,7 @@ func NewUserController() UserController {
 	return UserController{UserService: userService}
 }
 
-func (u UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
+func (u UserController) Create(w http.ResponseWriter, r *http.Request) {
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		response.Error(w, http.StatusBadRequest, err)
@@ -47,7 +48,7 @@ func (u UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 		Age:      user.Age,
 	}
 
-	err = u.UserService.Init(process)
+	err = u.UserService.Init(process, http.MethodPost)
 	if err != nil {
 		response.Error(w, http.StatusBadRequest, err)
 		return
@@ -57,4 +58,25 @@ func (u UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 		Message:    "successfully created user",
 		StatusCode: http.StatusCreated,
 	})
+}
+
+func (u UserController) Delete(w http.ResponseWriter, r *http.Request) {
+	email := r.URL.Query().Get("email")
+	if len(email) == 0 {
+		response.Error(w, http.StatusBadRequest, errors.New("invalid email query parameter"))
+		return
+	}
+
+	process := ports.Process{
+		Email: email,
+	}
+
+	err := u.UserService.Init(process, http.MethodDelete)
+	if err != nil {
+		response.Error(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response.Write(w, http.StatusNoContent, nil)
+	return
 }

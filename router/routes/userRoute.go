@@ -9,6 +9,11 @@ var UserRoutes = []Route{
 	{
 		URI:    "/user",
 		Method: http.MethodPost,
-		Func:   controller.NewUserController().CreateUser,
+		Func:   controller.NewUserController().Create,
+	},
+	{
+		URI:    "/user",
+		Method: http.MethodDelete,
+		Func:   controller.NewUserController().Delete,
 	},
 }
